@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="vi">
+<head>
+  <title>MPURS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
+  <script src="/static/vendor/socketio/socketio.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/static/vendor/tilt/tilt.jquery.min.js"></script>
+  <script src="/static/vendor/bootstrap/js/popper.js"></script>
+	<script src="/static/vendor/select2/select2.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="/static/vendor/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+      namespace = '/home';
+      var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+      const SUBJECT_NAME = ['toan', 'ly', 'hoa', 'sinh', 'van', 'su', 'dia', 'ngoaingu', 'gdcd'];
+      const SUBJECT_COMBINATION = ['A00', 'A01', 'A02', 'B00', 'C00', 'D01', 'D07', 'D09'];
+      var markSubmitButton = document.getElementById("markSubmitButton");
+
+      socket.on('timeElapsed', function(msg) {
+        $('#timeElapsed').empty();
+        $('#timeElapsed').append('Time Elapsed: ' + msg.data);
+      });
+
+      socket.on('markResult', function(msg) {
+        for (var k = 0; k < SUBJECT_NAME.length; k++) {
+          document.getElementById(SUBJECT_NAME[k]).innerHTML = msg[SUBJECT_NAME[k]];
+        };
+      });
+
+      socket.on('markPerGradeResult', function(msg) {
+        for (var k = 0; k < SUBJECT_COMBINATION.length; k++) {
+          document.getElementById(SUBJECT_COMBINATION[k]).innerHTML = msg[SUBJECT_COMBINATION[k]];
+        };
+      });
+
+      socket.on('universitiesResult', function(msg) {
+        // document.write(msg);
+        var listUniversities = document.getElementById("listUniversities");
+        listUniversities.innerHTML = '';
+        for (var k = 0; k < msg.length; k++) {
+          listUniversities.innerHTML += (msg[k] + '<br />');
+        };
+      });
+
+      markSubmitButton.onclick = function() {
+        var markSubmit = {};
+        for (var k = 0; k < SUBJECT_NAME.length; k++) {
+          markSubmit[SUBJECT_NAME[k]] = parseFloat(document.getElementsByName(SUBJECT_NAME[k])[0].value)
+        };
+        socket.emit('predictAndRecommend', markSubmit);
+      };
+
+    });
+  </script>
+</head>
+<body>
+  <h1 align = center><b>Hệ thống dự đoán điểm thi THPTQG và gợi ý trường Đại học</b></h1>
+  <div id="resultBox">
+    <h2 align = center ><b>KẾT QUẢ DỰ ĐOÁN</b></h2>
+    <span>
+      <h4 align = center><b>Số điểm dự đoán</b></h4>
+      <b>Toán: </b><span id='toan'></span>
+      <b>| Lý: </b><span id='ly'></span>
+      <b>| Hóa: </b><span id='hoa'></span>
+      <b>| Sinh: </b><span id='sinh'></span>
+      <b>| Văn: </b><span id='van'></span>
+      <b>| Sử: </b><span id='su'></span>
+      <b>| Địa: </b><span id='dia'></span>
+      <b>| Ngoại ngữ: </b><span id='ngoaingu'></span>
+      <b>| GDCD: </b><span id='gdcd'></span>
+    </span>
+    <hr />
+    <span>
+      <h4 align = center><b>Điểm số theo khối</b></h4>
+      <b>A00: </b><span id='A00'></span>
+      <b>| A01: </b><span id='A01'></span>
+      <b>| A02: </b><span id='A02'></span>
+      <b>| B00: </b><span id='B00'></span>
+      <b>| C00: </b><span id='C00'></span>
+      <b>| D01: </b><span id='D01'></span>
+      <b>| D07: </b><span id='D07'></span>
+      <b>| D09: </b><span id='D09'></span>
+    </span>
+    <hr />
+    <h4 align = center><b>Danh sách các trường Đại học có thể đăng ký</b></h4>
+    <span id="listUniversities">
+    </span>
+  </div>
+  <div style="display:inline-block;">
+  <div class="wrap-input100 validate-input">
+    <label for="toan"><b>Toán</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Toán" name="toan" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="ly"><b>Lý</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Lý" name="ly" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="hoa"><b>Hóa</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Hóa" name="hoa" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="sinh"><b>Sinh</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Sinh" name="sinh" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="van"><b>Văn</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Văn" name="van" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="su"><b>Sử</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Sử" name="su" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="dia"><b>Địa</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Địa" name="dia" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="ngoaingu"><b>Ngoại ngữ</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Ngoại ngữ" name="ngoaingu" required>
+    <span class="focus-input100"></span>
+  </div>
+  <div class="wrap-input100 validate-input">
+    <label for="GDCD"><b>GDCD</b></label>
+    <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="GDCD" name="gdcd" required>
+    <span class="focus-input100"></span>
+  </div>
+  <button id="markSubmitButton">Dự đoán</button>
+  </div>
+
+  <div id  = 'timeElapsed' align = "center"></div>
+</body>
+</html>
