@@ -63,9 +63,11 @@
   </script>
 </head>
 <body>
-  <h1 align = center><b>Hệ thống dự đoán điểm thi THPTQG và gợi ý trường Đại học</b></h1>
+  <h1 align = center style="padding:5px;"><b>Hệ thống dự đoán điểm thi THPTQG và gợi ý trường Đại học</b></h1>
+  <hr />
   <div id="resultBox">
     <h2 align = center ><b>KẾT QUẢ DỰ ĐOÁN</b></h2>
+    <hr />
     <span>
       <h4 align = center><b>Số điểm dự đoán</b></h4>
       <b>Toán: </b><span id='toan'></span>
@@ -95,7 +97,7 @@
     <span id="listUniversities">
     </span>
   </div>
-  <div style="display:inline-block;">
+  <div style="display:inline-block;position:absolute;top:inherit;">
   <div class="wrap-input100 validate-input">
     <label for="toan"><b>Toán</b></label>
     <input class="input100" type="number" min="0" max="10" step="0.1" value = "0" placeholder="Toán" name="toan" required>

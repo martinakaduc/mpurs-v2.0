@@ -5,6 +5,8 @@
   margin: 25px;
   width: 65%;
   display: inline-block;
+  /* position: fixed;
+  top: inherit; */
 }
 
 
@@ -242,6 +244,7 @@ iframe {
   width: 100%;
   z-index: 1;
   margin-bottom: 10px;
+  /* display: inline-block; */
   /* align-self: center; */
 }
 
