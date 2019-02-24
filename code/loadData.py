@@ -1,6 +1,7 @@
 import xlrd
 import numpy as np
 import constant
+from sklearn.model_selection import train_test_split
 
 diemchuanOfficial = xlrd.open_workbook(constant.DIEMCHUAN_OFFICAL)
 diemchuanOfficialSheet = diemchuanOfficial.sheet_by_index(0)
@@ -74,5 +75,12 @@ for schoolName in constant.SCHOOLS_NAME:
                     X[index].append(subjectMark)
                     y[index].append(soDiemTongKetList[schoolName][sheetName][studentIndex][subjectTkIndex])
 
-# print(X)
+X_train = {}
+X_test = {}
+y_train = {}
+y_test = {}
+
+for subject in constant.SUBJECT_NAME:
+    X_train[subject], X_test[subject], y_train[subject], y_test[subject] = train_test_split(X[subject], y[subject], test_size=0.2,  random_state=42)
+# print(X_test)
 print("Successfully loading data!")
