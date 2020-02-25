@@ -12,7 +12,7 @@ def round_fifth(x):
 def predictMark(markDict):
     markPredictedDict = {}
     for subjectName in constant.SUBJECT_NAME:
-        markPredictedDict[subjectName] = predictMarkModel[subjectName].predict(markDict[subjectName])
+        markPredictedDict[subjectName] = predictMarkModel[subjectName].predict([[markDict[subjectName]]])
         if subjectName == 'toan' or subjectName == 'ngoaingu':
             markPredictedDict[subjectName] = round_fifth(markPredictedDict[subjectName]).tolist()[0]
         else:

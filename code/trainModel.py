@@ -16,7 +16,7 @@ print("All models were completely trained!")
 def calRMSE(clf, testData, testLabel):
     sumError = 0
     for x in testData:
-        sumError += (clf.predict(x) - testLabel[testData.index(x)])**2
+        sumError += (clf.predict([[x]]) - testLabel[testData.index(x)])**2
     return np.sqrt(sumError/len(testData))
 
 for subject in constant.SUBJECT_NAME:
